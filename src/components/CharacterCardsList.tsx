@@ -14,6 +14,7 @@ type Props = {
 
 function CharacterCardsList(props:Props) {
     const [count , setCount] = useState<number>(0);
+    console.log("Card list characters: "+props.characters.length);
 
     function onChangeHandler(event:ChangeEvent<HTMLInputElement>):void{
         const searchedCharacters:RickAndMortyCharacter[] = allCharacters

@@ -1,13 +1,18 @@
 import "./CharacterCardsList.css";
 import {ChangeEvent, useState} from "react";
 import CharacterCard from "./CharacterCard.tsx";
-import allCharacters from "../data/allCharacters.ts";
 import RickAndMortyCharacter from "../interfaces/RickAndMortyCharacter.ts";
 import SearchInput from "./SearchInput.tsx";
 import ErrorMessage from "./ErrorMessage.tsx";
+import {Link} from "react-router-dom";
+import allCharacters from "../data/allCharacters.ts";
 
-function CharacterCardsList() {
-    const [characters , setCharacters] = useState<RickAndMortyCharacter[]>(allCharacters);
+type Props = {
+    characters: RickAndMortyCharacter[],
+    setCharacters: (value:RickAndMortyCharacter[]) => void
+}
+
+function CharacterCardsList(props:Props) {
     const [count , setCount] = useState<number>(0);
 
     function onChangeHandler(event:ChangeEvent<HTMLInputElement>):void{
@@ -18,7 +23,7 @@ function CharacterCardsList() {
                 character.species.includes(event.target.value) ||
                 character.status.includes(event.target.value)
             )
-        setCharacters(searchedCharacters);
+        props.setCharacters(searchedCharacters);
     }
 
     function onClickHandler() {
@@ -28,15 +33,16 @@ function CharacterCardsList() {
             searchedCharacters.push(allCharacters[i])
         }
         count<allCharacters.length-5 ? setCount(initialCount+5) : setCount(0);
-        setCharacters(searchedCharacters);
+        props.setCharacters(searchedCharacters);
     }
 
     return (
         <section className={"characters-list"}>
+            <Link to={"/characters/add"}>Add</Link>
             <h1>Rick and morty</h1>
-            <SearchInput onChangeFunction={onChangeHandler} onClickFunction={onClickHandler} total={characters.length}/>
+            <SearchInput onChangeFunction={onChangeHandler} onClickFunction={onClickHandler} total={props.characters.length}/>
             <div className={"characters-list-grid"}>
-                {characters.length === 0 ? <ErrorMessage /> :characters.map((character:RickAndMortyCharacter) => {
+                {props.characters.length === 0 ? <ErrorMessage /> :props.characters.map((character:RickAndMortyCharacter) => {
                     return (<CharacterCard
                         key={character.id}
                         id={character.id}
